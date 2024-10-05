@@ -10,6 +10,36 @@
     let
       pkgs = import nixpkgs { system = "x86_64-linux"; };
       sass = pkgs.callPackage ./sass/default.nix { };
+      var_dumper = ./php-decoration;
+
+      php_env = pkgs.php;
+
+      php_dumper = pkgs.writeShellApplication {
+        name = "_";
+        runtimeInputs = with pkgs; [
+          php_env
+          grc
+        ];
+        text = ''
+          ${var_dumper}/vendor/bin/var-dump-server
+        '';
+      };
+
+      php_runner = pkgs.writeShellApplication {
+        name = "_";
+        runtimeInputs = with pkgs; [
+          php_env
+          grc
+        ];
+        text = ''
+          ${php_env}/bin/php -S 0.0.0.0:8080 \
+            -d memory_limit=4G \
+            -d error_reporting=E_ALL \
+            -d log_errors=On \
+            -d auto_prepend_file=${var_dumper}/debug.php \
+            -d error_log=/tmp/php.error.log
+        '';
+      };
 
       server_builder = pkgs.writeShellApplication {
         name = "_";
@@ -192,6 +222,8 @@
       packages.x86_64-linux.make_css = sass_builder;
       packages.x86_64-linux.make_scheme = scheme_builder;
       packages.x86_64-linux.make_server = server_builder;
+      packages.x86_64-linux.run_php = php_runner;
+      packages.x86_64-linux.run_php_dump = php_dumper;
 
     };
 }

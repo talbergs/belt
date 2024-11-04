@@ -58,7 +58,7 @@
           php_env_debugger
         ];
         text = ''
-          ${php_env_debugger}/bin/php -S 0.0.0.0:8888 \
+          ${php_env_debugger}/bin/php -S 0.0.0.0:$1 \
             -d memory_limit=4G \
             -d error_reporting=E_ALL \
             -d log_errors=On \

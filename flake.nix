@@ -177,62 +177,59 @@
               exit 1
           fi
 
-            tmp=/tmp/builder-$(basename "$0")
+          tmp=/tmp/builder-$(basename "$0")
 
-            if [[ -d "$tmp" ]];then
-                rm -rf "$tmp"
-            fi
-            mkdir -p "$tmp"
+          if [[ -d "$tmp" ]];then
+              rm -rf "$tmp"
+          fi
+          mkdir -p "$tmp"
 
-            src=$PWD
-            cp -r "$src/src" "$tmp/src"
-            cp -r "$src/database" "$tmp/database"
-            cp -r "$src/include" "$tmp"
-            cp -r "$src/man" "$tmp"
-            cp -r "$src/misc" "$tmp"
-            cp -r "$src/m4" "$tmp"
-            cp -r "$src/create" "$tmp"
-            cp -r "$src/conf" "$tmp"
-            cp -r "$src/templates" "$tmp"
+          src=$PWD
+          cp -r "$src/src" "$tmp/src"
+          cp -r "$src/database" "$tmp/database"
+          cp -r "$src/include" "$tmp"
+          cp -r "$src/man" "$tmp"
+          cp -r "$src/misc" "$tmp"
+          cp -r "$src/m4" "$tmp"
+          cp -r "$src/create" "$tmp"
+          cp -r "$src/conf" "$tmp"
+          cp -r "$src/templates" "$tmp"
 
-            cp "$src/configure.ac" "$tmp"
-            cp "$src/AUTHORS" "$tmp"
-            cp "$src/Makefile.am" "$tmp"
-            cp "$src/ChangeLog" "$tmp"
-            cp "$src/NEWS" "$tmp"
-            cp "$src/README" "$tmp"
-            cp "$src/bootstrap.sh" "$tmp"
+          cp "$src/configure.ac" "$tmp"
+          cp "$src/AUTHORS" "$tmp"
+          cp "$src/Makefile.am" "$tmp"
+          cp "$src/ChangeLog" "$tmp"
+          cp "$src/NEWS" "$tmp"
+          cp "$src/README" "$tmp"
+          cp "$src/bootstrap.sh" "$tmp"
 
-            cd "$tmp"
-            aclocal -I m4
-            autoconf
-            autoheader
-            automake -a
-            automake
+          cd "$tmp"
+          aclocal -I m4
+          autoconf
+          autoheader
+          automake -a
+          automake
 
-            ./configure --with-mysql --with-postgresql
+          ./configure --with-mysql --with-postgresql
 
-            make dbschema
+          make dbschema
 
-            cd -
+          cd -
 
-            dst=$PWD/_db
-            if [[ -d "$dst" ]];then
-                rm -rf "$dst"
-            fi
-            mkdir -p "$dst"
+          dst=$1
+          mkdir -p "$dst"
 
-            cat \
-                "$tmp/database/postgresql/schema.sql" \
-                "$tmp/database/postgresql/images.sql" \
-                "$tmp/database/postgresql/data.sql" \
-            > "$dst/postgresql.sql"
+          cat \
+              "$tmp/database/postgresql/schema.sql" \
+              "$tmp/database/postgresql/images.sql" \
+              "$tmp/database/postgresql/data.sql" \
+          > "$dst/postgresql.sql"
 
-            cat \
-                "$tmp/database/mysql/schema.sql" \
-                "$tmp/database/mysql/images.sql" \
-                "$tmp/database/mysql/data.sql" \
-            > "$dst/mysql.sql"
+          cat \
+              "$tmp/database/mysql/schema.sql" \
+              "$tmp/database/mysql/images.sql" \
+              "$tmp/database/mysql/data.sql" \
+          > "$dst/mysql.sql"
         '';
       };
 

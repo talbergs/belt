@@ -48,7 +48,7 @@
           grc
         ];
         text = ''
-          source ${pkgs.glibcLocalesUtf8}/nix-support/setup-hook
+          LOCALE_ARCHIVE=${pkgs.glibcLocalesUtf8.override {allLocales = true;}}/lib/locale/locale-archive \
           ${var_dumper}/vendor/bin/var-dump-server
         '';
       };
@@ -59,7 +59,7 @@
           php_env_debugger
         ];
         text = ''
-          source ${pkgs.glibcLocalesUtf8}/nix-support/setup-hook
+          LOCALE_ARCHIVE=${pkgs.glibcLocalesUtf8.override {allLocales = true;}}/lib/locale/locale-archive \
           ${php_env_debugger}/bin/php -S 0.0.0.0:"$1" \
             -d memory_limit=4G \
             -d error_reporting=E_ALL \
@@ -75,7 +75,7 @@
           php_env
         ];
         text = ''
-          source ${pkgs.glibcLocalesUtf8}/nix-support/setup-hook
+          LOCALE_ARCHIVE=${pkgs.glibcLocalesUtf8.override {allLocales = true;}}/lib/locale/locale-archive \
           ${php_env}/bin/php -S 0.0.0.0:8080 \
             -d memory_limit=4G \
             -d error_reporting=E_ALL \
